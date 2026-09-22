@@ -193,6 +193,7 @@ This project relies on:
 - `cdo` (Climate Data Operators)
 - `netCDF4`
 - `glob`-based file management and standard Python libraries
+- `pyTRACK` (https://github.com/zappag/pyTRACK-CMIP6)
 
 ---
 
