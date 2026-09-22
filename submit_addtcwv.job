@@ -1,0 +1,50 @@
+#!/bin/bash
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=1000M
+#SBATCH --time 72:00:00
+#SBATCH --job-name=track4esa
+#SBATCH -p batch
+
+
+ver=4
+reans=(ERA5 JRA3Q MERRA2)
+features=('anticyc' 'cyc')
+for ff in ${features[@]}; do
+    for rr in ${reans[@]}; do
+	python add_tcwv_tracks.py --fdata ${rr} --fres '' --dosubsample --doaddtcwv --dostats --doradial --feature ${ff} --version $ver
+	python add_tcwv_tracks.py --fdata ${rr} --fres '50km' --dosubsample --doaddtcwv --dostats --doradial --feature ${ff}  --version $ver
+	python add_tcwv_tracks.py --fdata ${rr} --fres '50km-day' --dosubsample --doaddtcwv --dostats --doradial --feature ${ff}  --version $ver
+	python add_tcwv_tracks.py --fdata ${rr} --fres '50km-day' --dosubsample --doaddtcwv --dostats --doradial --feature ${ff} --fsubmask Ocean  --version $ver
+	python add_tcwv_tracks.py --fdata ${rr} --fres '50km-day' --dosubsample --doaddtcwv --dostats --doradial --feature ${ff} --fsubmask LandCoastIce  --version $ver
+	python add_tcwv_tracks.py --fdata ${rr} --fres '50km-day-masked' --dosubsample --doaddtcwv --dostats --doradial --feature ${ff}  --version $ver
+	python add_tcwv_tracks.py --fdata ${rr} --fres '50km-day-masked' --dosubsample --doaddtcwv --dostats --doradial --feature ${ff} --fsubmask Ocean  --version $ver
+	python add_tcwv_tracks.py --fdata ${rr} --fres '50km-day-masked' --dosubsample --doaddtcwv --dostats --doradial --feature ${ff} --fsubmask LandCoastIce  --version $ver
+    done
+done
+
+for ff in ${features[@]}; do
+    python add_tcwv_tracks.py --fdata 'ESA' --fres '' --dosubsample --doaddtcwv --dostats --doradial --feature ${ff} --version $ver
+    python add_tcwv_tracks.py --fdata 'ESA' --fres '' --dosubsample --doaddtcwv --dostats --doradial --feature ${ff} --fsubmask Ocean --version $ver
+    python add_tcwv_tracks.py --fdata 'ESA' --fres '' --dosubsample --doaddtcwv --dostats --doradial --feature ${ff} --fsubmask LandCoastIce --version $ver
+done
+
+
+# ## ESA version 4 cross
+# features=('anticyc' 'cyc')
+# ver=4
+# for ff in ${features[@]}; do
+#     python add_tcwv_tracks.py --fdata 'ESAcross' --fres '' --dosubsample --doaddtcwv --dostats --doradial --feature ${ff} --version $ver 
+#     python add_tcwv_tracks.py --fdata 'ESAcross' --fres '' --dosubsample --doaddtcwv --dostats --doradial --feature ${ff} --fsubmask Ocean --version $ver
+#     python add_tcwv_tracks.py --fdata 'ESAcross' --fres '' --dosubsample --doaddtcwv --dostats --doradial --feature ${ff} --fsubmask LandCoastIce --version $ver
+# done
+
+### ERA5 test anticyclones
+#python add_tcwv_tracks.py --fdata ESA  --dosubsample --doaddtcwv --dostats --doradial --feature 'anticyc'
+#python add_tcwv_tracks.py --fdata ESA  --dosubsample --doaddtcwv --dostats --doradial --feature 'anticyc' --fsubmask Ocean
+#python add_tcwv_tracks.py --fdata ESA  --dosubsample --doaddtcwv --dostats --doradial --feature 'anticyc' --fsubmask LandCoastIce
+
+#python add_tcwv_tracks.py --fdata ERA5 --fres '50km-day-masked' --doradial --feature 'anticyc' --fsubmask Ocean --testing
+#python add_tcwv_tracks.py --fdata ERA5 --fres '50km-day' --doradial --feature 'anticyc' --fsubmask Ocean --testing
+#python add_tcwv_tracks.py --fdata ESA  --doradial --feature 'anticyc' --fsubmask Ocean --testing
+

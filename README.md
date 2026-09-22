@@ -4,8 +4,8 @@ This repository contains a workflow for preparing ESA CCI total column water vap
 
 The project is built around two main processing stages:
 
-1. `esa_timemask4.py` — loads ESA CCI WV data, applies mask logic, and saves seasonal NetCDF files.
-2. `addtcwv_era5_6h_home_v2.py` — loads the masked data and appends TCWV statistics to track files for downstream analysis.
+1. `mask_tcwv_esa.py` — loads ESA CCI WV data, applies mask logic, and saves seasonal NetCDF files.
+2. `add_tcwv_tracks.py` — loads the masked data and appends TCWV statistics to track files for downstream analysis.
 
 ---
 
@@ -29,7 +29,7 @@ The processing is organized around seasonal batches for each meteorological seas
 
 ---
 
-## Main processing script: `esa_timemask4.py`
+## Main processing script: `mask_tcwv_esa.py`
 
 This script handles the ESA CCI data preparation and masking workflow.
 
@@ -81,8 +81,8 @@ Output directories are typically organized by dataset and resolution, for exampl
 ### Command-line usage
 
 ```bash
-python esa_timemask4.py --fdata ESA --year 2003 --version 4
-python esa_timemask4.py --fdata ERA5 --year 2003 --version 4 --fullrun
+python mask_tcwv_esa.py --fdata ESA --year 2003 --version 4
+python mask_tcwv_esa.py --fdata ERA5 --year 2003 --version 4 --fullrun
 ```
 
 Key arguments:
@@ -95,7 +95,7 @@ Key arguments:
 
 ---
 
-## Downstream analysis: `addtcwv_era5_6h_home_v2.py`
+## Downstream analysis: `add_tcwv_tracks.py`
 
 This second script takes track files and attaches TCWV fields from the processed data products.
 
@@ -156,7 +156,7 @@ Main argument flags include:
 ### Example
 
 ```bash
-python addtcwv_era5_6h_home_v2.py \
+python add_tcwv_tracks.py \
   --fdata ESA \
   --fres 50km-day-masked \
   --fsubmask LandCoastIce \
@@ -174,8 +174,8 @@ python addtcwv_era5_6h_home_v2.py \
 The typical research workflow is:
 
 1. Download ESA CCI WV files and reanalysis data.
-2. Run `esa_timemask4.py` to prepare and seasonally split masked TCWV data.
-3. Run `addtcwv_era5_6h_home_v2.py` to attach TCWV to storm tracks.
+2. Run `mask_tcwv_esa.py` to prepare and seasonally split masked TCWV data.
+3. Run `add_tcwv_tracks.py` to attach TCWV to storm tracks.
 4. Compute seasonal composites or summary statistics across track points.
 5. Compare results across datasets, masks, and versions.
 
@@ -200,8 +200,8 @@ This project relies on:
 
 ```text
 ESACCI/
-├── esa_timemask4.py
-├── addtcwv_era5_6h_home_v2.py
+├── mask_tcwv_esa.py
+├── add_tcwv_tracks.py
 ├── split_to_seasons.py
 ├── readme
 ├── submit.job
