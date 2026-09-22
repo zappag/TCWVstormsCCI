@@ -1,0 +1,38 @@
+#!/bin/bash
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=50GB
+#SBATCH --time 24:00:00
+#SBATCH --job-name=track4esa
+#SBATCH -p batch
+
+#sy=2002
+#ly=2017
+sy=2015
+ly=2015 
+
+#reans=(ESA ERA5 JRA3Q MERRA2)
+reans=(ESA)
+xmask='True'
+version=4
+
+if [ $xmask == 'True' ]; then
+    xmaskext='--crossmask'
+else
+    xmaskext=''
+fi
+
+for rr in ${reans[@]}; do
+    yy=$sy
+    while [ $yy -le $ly ]; do
+	echo running year $yy
+	# unbuffered print to follow processing
+	echo esa_timemask4.py --fdata ${rr} --year ${yy} --version ${version} --fullrun ${xmaskext}
+	python -u esa_timemask4.py --fdata ${rr} --year ${yy} --version ${version} --fullrun ${xmaskext}
+
+	yy=$((yy+1))
+    done
+done
+exit 0
+
+
